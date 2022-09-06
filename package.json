@@ -1,14 +1,16 @@
 {
   "name": "@shultom/auth-middleware",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "auth middleware for express to help verify tokens",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
     "test:local": "jest --config jestconfig.json --silent=false --coverage",
     "test": "jest --config jestconfig.json --coverage",
-    "build": "tsc"
+    "build": "tsc",
+    "prepublish": "npm run build"
   },
-  "author": "",
+  "author": "shultztom",
   "license": "ISC",
   "devDependencies": {
     "@types/express": "^4.17.13",
