@@ -1,6 +1,6 @@
 {
   "name": "@shultztom/auth-middleware",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "auth middleware for express to help verify tokens",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -21,7 +21,8 @@
     "typescript": "^4.8.2"
   },
   "files": [
-    "lib/**/*"
+    "lib/**/*",
+    "README.md"
   ],
   "dependencies": {
     "axios": "^0.27.2",
