@@ -1,6 +1,6 @@
 {
   "name": "@shultztom/auth-middleware",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "auth middleware for express to help verify tokens",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
