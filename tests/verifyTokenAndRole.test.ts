@@ -6,9 +6,9 @@ const app: express.Express = express();
 import * as httpMocks from 'node-mocks-http';
 import axios from 'axios';
 
-import {verifyToken} from '../src';
+import { verifyTokenAndRole } from '../src';
 
-describe('Authorization middleware', () => {
+describe('verifyTokenAndRole middleware', () => {
     let mockRequest: Partial<Request>;
     let mockResponse: Partial<Response>;
     let nextFunction: NextFunction = jest.fn();
@@ -23,7 +23,7 @@ describe('Authorization middleware', () => {
         mockResponse = httpMocks.createResponse();
         const spy = jest.spyOn(mockResponse, 'send');
         const expectedResponse = "Missing Token!";
-        await verifyToken(mockRequest as Request, mockResponse as Response, nextFunction);
+        await verifyTokenAndRole('my-role')(mockRequest as Request, mockResponse as Response, nextFunction);
         expect(spy).toBeCalledWith(expectedResponse);
     });
 
@@ -36,11 +36,11 @@ describe('Authorization middleware', () => {
         mockResponse = httpMocks.createResponse();
         const spy = jest.spyOn(mockResponse, 'send');
         const expectedResponse = "Invalid Token!";
-        await verifyToken(mockRequest as Request, mockResponse as Response, nextFunction);
+        await verifyTokenAndRole('my-role')(mockRequest as Request, mockResponse as Response, nextFunction);
         expect(spy).toBeCalledWith(expectedResponse);
     });
 
-    test('with valid token in header', async () => {
+    test('with valid token in header and missing role', async () => {
         const testUserAxiosConfig = {
             method: 'POST',
             url: 'https://auth-api-go.shultzlab.com/login',
@@ -59,7 +59,32 @@ describe('Authorization middleware', () => {
             }
         });
         mockResponse = httpMocks.createResponse();
-        await verifyToken(mockRequest as Request, mockResponse as Response, nextFunction);
+        const spy = jest.spyOn(mockResponse, 'send');
+        const expectedResponse = "Missing Access!";
+        await verifyTokenAndRole('my-role')(mockRequest as Request, mockResponse as Response, nextFunction);
+        expect(spy).toBeCalledWith(expectedResponse);
+    });
+
+    test('with valid token in header and has role', async () => {
+        const testUserAxiosConfig = {
+            method: 'POST',
+            url: 'https://auth-api-go.shultzlab.com/login',
+            data: {
+                "username": "test6",
+                "password": "123"
+            }
+        }
+
+        const results = await axios(testUserAxiosConfig);
+        const {token} = results.data;
+
+        mockRequest = httpMocks.createRequest({
+            headers: {
+                'x-auth-token': token
+            }
+        });
+        mockResponse = httpMocks.createResponse();
+        await verifyTokenAndRole('my-valid-role')(mockRequest as Request, mockResponse as Response, nextFunction);
         expect(nextFunction).toBeCalledTimes(1);
     });
 

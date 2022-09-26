@@ -1,6 +1,6 @@
 # auth-middleware
 
-### Usage
+### Usage for verifyToken
 
 ```js
 // import
@@ -15,7 +15,26 @@ app.use(verifyToken);
 ```js
 // Use at router level
 router.get("/", verifyToken, function(req, res, next) {
-    res.render("index", { title: "Hello World!" });
+    res.status(200).send('Hello World!');
+});
+```
+
+### Usage for verifyTokenAndRole
+
+```js
+// import
+const { verifyTokenAndRole } = require("@shultztom/auth-middleware")
+```
+
+```js
+// Use at app level
+app.use(verifyTokenAndRole("my-role"));
+```
+
+```js
+// Use at router level
+router.get("/", verifyToken("my-role"), function(req, res, next) {
+   res.status(200).send('Hello World!');
 });
 ```
 
