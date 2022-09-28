@@ -27,10 +27,10 @@ const verifyTokenCall = async (token: string) => {
         if (results.status === 200 && results.data.message === 'success') {
             return 200;
         } else {
-            return 403;
+            return 401;
         }
     } catch (e: any) {
-        return 403;
+        return 401;
     }
 }
 
@@ -59,8 +59,8 @@ const verifyRole = async (token: string, role: string) => {
 export const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
     const token = getTokenFromHeader(req, res);
     const tokenCode = await verifyTokenCall(token.toString());
-    if(tokenCode === 403){
-        return res.status(403).send('Invalid Token!');
+    if(tokenCode === 401){
+        return res.status(401).send('Invalid Token!');
     }
     next();
 }
@@ -72,8 +72,8 @@ export const verifyTokenAndRole = (role: string) => async (req: Request, res: Re
 
     // Check token
     const tokenCode = await verifyTokenCall(token.toString());
-    if(tokenCode === 403){
-        return res.status(403).send('Invalid Token!');
+    if(tokenCode === 401){
+        return res.status(401).send('Invalid Token!');
     }
 
     // Check role
