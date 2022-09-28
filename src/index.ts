@@ -48,10 +48,10 @@ const verifyRole = async (token: string, role: string) => {
         if(results.status === 200 && results.data.hasRoleAlready){
             return 200;
         }else{
-            return 401;
+            return 403;
         }
     } catch (e: any) {
-        return 403;
+        return 401;
     }
 }
 
@@ -78,10 +78,10 @@ export const verifyTokenAndRole = (role: string) => async (req: Request, res: Re
 
     // Check role
     const roleCode = await verifyRole(token.toString(), role);
-    if(roleCode === 403){
-        return res.status(403).send('Invalid Token!');
-    }else if(roleCode === 401){
-        return res.status(401).send('Missing Access!');
+    if(roleCode === 401){
+        return res.status(401).send('Invalid Token!');
+    }else if(roleCode === 403){
+        return res.status(403).send('Missing Access!');
     }
 
     next();
